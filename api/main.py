@@ -17,6 +17,7 @@ from linebot.v3.webhooks import MessageEvent, TextMessageContent
 
 from utils.config import logger
 from utils.chat import generate_chat_response
+from common.generation import chat
 
 load_dotenv()
 
@@ -61,7 +62,8 @@ def handle_message(event):
         logger.info("ローディングアニメーションを表示しました。")
 
         # OpenAIでレスポンスメッセージを作成
-        response = generate_chat_response(event.message.text)
+        # response = generate_chat_response(event.message.text)
+        response = chat(event.message.text, [])
         logger.info(f"生成されたレスポンス: {response}")
 
         # メッセージを返信
