@@ -18,6 +18,7 @@ from linebot.v3.webhooks import MessageEvent, TextMessageContent
 from utils.config import logger
 from utils.chat import generate_chat_response
 from common.generation import chat
+from utils.cosmos_db import save_chat_message, fetch_recent_chat_messages
 
 load_dotenv()
 
@@ -57,13 +58,21 @@ def handle_message(event):
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
 
+        user_id = event.source.user_id
+        user_input = event.message.text
+
         # ローディングアニメーションを表示
         line_bot_api.show_loading_animation(ShowLoadingAnimationRequest(chatId=chatId, loadingSeconds=60))
         logger.info("ローディングアニメーションを表示しました。")
 
+        # DBにメッセージを保存
+        save_chat_message(user_id, user_input)
+
         # OpenAIでレスポンスメッセージを作成
+        recent_messages = fetch_recent_chat_messages(limit=10)
+        session_data = {"messages": [{"role": "user", "content": msg[1]} for msg in recent_messages]}
         # response = generate_chat_response(event.message.text)
-        response = chat(event.message.text, [])
+        response = chat(user_input, session_data)
         logger.info(f"生成されたレスポンス: {response}")
 
         # メッセージを返信
