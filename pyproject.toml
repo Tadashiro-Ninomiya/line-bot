@@ -17,6 +17,15 @@ azure-cosmos = "^4.6.0"
 pytz = "^2024.1"
 langchain-anthropic = "^0.1.11"
 gunicorn = "^22.0.0"
+flask = "^2.3.2"
+pyngrok = "^5.1.0"
+openai = "*"
+pandas = "*"
+pinecone-client = "*"
+pinecone-text = "*"
+nltk = "*"
+streamlit = "*"
+streamlit-text-rating = "*"
 
 
 [build-system]
