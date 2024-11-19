@@ -18,7 +18,7 @@ from linebot.v3.webhooks import MessageEvent, TextMessageContent
 from utils.config import logger
 from utils.chat import generate_chat_response
 from common.generation import chat
-from utils.cosmos_db import save_chat_message, fetch_recent_chat_messages
+from utils.cosmos import save_chat_message, fetch_recent_chat_messages
 
 load_dotenv()
 
