@@ -65,15 +65,16 @@ def handle_message(event):
         line_bot_api.show_loading_animation(ShowLoadingAnimationRequest(chatId=chatId, loadingSeconds=60))
         logger.info("ローディングアニメーションを表示しました。")
 
-        # DBにメッセージを保存
-        save_chat_message(user_id, user_input)
-
         # OpenAIでレスポンスメッセージを作成
         recent_messages = fetch_recent_chat_messages(limit=10)
         session_data = {"messages": [{"role": "user", "content": msg[1]} for msg in recent_messages]}
         # response = generate_chat_response(event.message.text)
         response = chat(user_input, session_data)
         logger.info(f"生成されたレスポンス: {response}")
+
+        # DBにメッセージを保存
+        save_chat_message(user_id, user_input)
+        save_chat_message("ai", response)
 
         # メッセージを返信
         line_bot_api.reply_message_with_http_info(
