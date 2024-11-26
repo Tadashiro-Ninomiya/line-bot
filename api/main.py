@@ -87,8 +87,15 @@ def handle_sticker_message(event):
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
 
+        user_id = event.source.user_id
+        user_stamp_message = event.message.keywords
+
+        # ローディングアニメーションを表示
+        line_bot_api.show_loading_animation(ShowLoadingAnimationRequest(chatId=chatId, loadingSeconds=60))
+        logger.info("ローディングアニメーションを表示しました。")
+
         # スタンプの返信メッセージを作成
-        response = "スタンプをありがとう！"
+        response = user_stamp_message
 
         # メッセージを返信
         line_bot_api.reply_message_with_http_info(
