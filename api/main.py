@@ -13,7 +13,7 @@ from linebot.v3.messaging import (
     ShowLoadingAnimationRequest,
     TextMessage,
 )
-from linebot.v3.webhooks import MessageEvent, TextMessageContent
+from linebot.v3.webhooks import MessageEvent, TextMessageContent, StickerMessageContent
 
 from utils.config import logger
 from utils.chat import generate_chat_response
@@ -81,6 +81,20 @@ def handle_message(event):
             ReplyMessageRequest(reply_token=event.reply_token, messages=[TextMessage(text=response)])
         )
         logger.info("メッセージをユーザーに返信しました。")
+
+@handler.add(MessageEvent, message=StickerMessageContent)
+def handle_sticker_message(event):
+    with ApiClient(configuration) as api_client:
+        line_bot_api = MessagingApi(api_client)
+
+        # スタンプの返信メッセージを作成
+        response = "スタンプをありがとう！"
+
+        # メッセージを返信
+        line_bot_api.reply_message_with_http_info(
+            ReplyMessageRequest(reply_token=event.reply_token, messages=[TextMessage(text=response)])
+        )
+        logger.info("スタンプの返信メッセージをユーザーに返信しました。")
 
 
 @app.get("/hello")
