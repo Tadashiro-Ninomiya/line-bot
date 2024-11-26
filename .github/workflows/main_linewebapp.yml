@@ -27,8 +27,8 @@ jobs:
           python -m venv venv
           source venv/bin/activate
       
-      # - name: Install dependencies
-      #   run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
@@ -66,4 +66,4 @@ jobs:
         with:
           app-name: 'linewebapp'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0C5F38BCE9DC4278989D0E2E1D51121B }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_867074C1C7144F51997BB3EFA464152C }}
