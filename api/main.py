@@ -88,14 +88,22 @@ def handle_sticker_message(event):
         line_bot_api = MessagingApi(api_client)
 
         user_id = event.source.user_id
-        user_stamp_message = event.message.keywords
+        user_stamp_message = "今、このようなスタンプを送信しました。\n" + str(event.message.keywords)
 
         # ローディングアニメーションを表示
         line_bot_api.show_loading_animation(ShowLoadingAnimationRequest(chatId=chatId, loadingSeconds=60))
         logger.info("ローディングアニメーションを表示しました。")
 
-        # スタンプの返信メッセージを作成
-        response = user_stamp_message
+        # OpenAIでレスポンスメッセージを作成
+        recent_messages = fetch_recent_chat_messages(limit=10)
+        session_data = {"messages": [{"role": "user", "content": msg[1]} for msg in recent_messages]}
+        # response = generate_chat_response(event.message.text)
+        response = chat(user_stamp_message, session_data)
+        logger.info(f"生成されたレスポンス: {response}")
+
+        # DBにメッセージを保存
+        save_chat_message(user_id, user_stamp_message)
+        save_chat_message("ai", response)
 
         # メッセージを返信
         line_bot_api.reply_message_with_http_info(
